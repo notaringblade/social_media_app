@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_media_app/auth/login_page.dart';
 import 'package:social_media_app/main_pages/main_page.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.light,
         primarySwatch: Colors.green,
       ),
-      home: const MainPage(),
+      home: const LoginPage(),
     );
   }
 }
