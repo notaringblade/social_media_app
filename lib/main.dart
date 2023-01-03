@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:social_media_app/auth/login_page.dart';
-import 'package:social_media_app/main_pages/main_page.dart';
+import 'package:social_media_app/auth/auth_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -15,11 +22,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        backgroundColor: Colors.black,
+        scaffoldBackgroundColor: const Color(0xff222222),
         brightness: Brightness.light,
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.grey,
+        iconTheme: IconThemeData(color: Colors.white),
+        textTheme: TextTheme(
+          bodyText1: TextStyle(
+            color: Colors.white
+          )
+        )
       ),
-      home: const LoginPage(),
+      home: const  AuthPage(),
     );
   }
 }

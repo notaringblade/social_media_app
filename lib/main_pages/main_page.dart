@@ -22,13 +22,15 @@ class _MainPageState extends State<MainPage> {
       ProfilePage()
 
     ];
+
+  
   @override
   Widget build(BuildContext context) {
     
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
-          leading: const Icon(Icons.menu, size: 24),
+          leading: const Icon(Icons.menu, size: 24, color: Colors.white),
           backgroundColor: Colors.transparent,
         ),
       body: screens[currentIndex],

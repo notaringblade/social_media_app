@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -5,11 +6,26 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        "HomePage",
-        style: TextStyle(color: Colors.white),
-      ),
-    );
+    final user = FirebaseAuth.instance.currentUser!;
+    void logout() async{
+      await FirebaseAuth.instance.signOut();
+    } 
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Welcome ${user.email}",
+            style: TextStyle(color: Colors.white),
+          ),
+          OutlinedButton.icon(
+            onPressed: () {
+              logout();
+            },
+            icon: Icon(Icons.logout_outlined),
+            label: Text("LogOut"),
+          )
+        ],
+      ));
   }
 }
