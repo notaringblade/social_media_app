@@ -32,15 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     void signUp() async {
 
-      showDialog(
-            context: context,
-            builder: (context) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                ),
-              );
-            });
+      
 
       if (emailController.text.isNotEmpty &&
           firstNameController.text.isNotEmpty &&
@@ -54,14 +46,19 @@ class _RegisterPageState extends State<RegisterPage> {
           friends: [],
         );
 
+        showDialog(
+            context: context,
+            builder: (context) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              );
+            });
         
         try {
         
           if (checkPassword()) {
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              snackBarMessage('Logging In', Colors.green),
-            );
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
                 email: emailController.text, password: passwordController.text);
             await FirebaseFirestore.instance
@@ -73,9 +70,7 @@ class _RegisterPageState extends State<RegisterPage> {
               snackBarMessage('Password Do Not Match', Colors.red),
             );
           }
-
-
-
+          
         } on FirebaseAuthException catch (e) {
           if (e.code == 'email-already-in-use') {
             ScaffoldMessenger.of(context).showSnackBar(
