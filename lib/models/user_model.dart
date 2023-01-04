@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 
 class UserModel extends Equatable {
@@ -6,7 +8,7 @@ class UserModel extends Equatable {
   final String lastName;
   final String username;
   final String email;
-  final List<UserModel> friends;
+  final List<String> friends;
   const UserModel({
     required this.firstName,
     required this.lastName,
@@ -32,7 +34,7 @@ class UserModel extends Equatable {
     String? lastName,
     String? username,
     String? email,
-    List<UserModel>? friends,
+    List<String>? friends,
   }) {
     return UserModel(
       firstName: firstName ?? this.firstName,
@@ -49,7 +51,7 @@ class UserModel extends Equatable {
       'lastName': lastName,
       'username': username,
       'email': email,
-      'friends': friends.map((x) => x.toMap()).toList(),
+      'friends': friends,
     };
   }
 
@@ -59,12 +61,16 @@ class UserModel extends Equatable {
       lastName: map['lastName'] as String,
       username: map['username'] as String,
       email: map['email'] as String,
-      friends: List<UserModel>.from((map['friends'] as List<int>).map<UserModel>((x) => UserModel.fromMap(x as Map<String,dynamic>),),),
-    );
+      friends: List<String>.from((map['friends'] as List<String>),
+    ));
   }
 
 
 
   @override
   bool get stringify => true;
+
+  String toJson() => json.encode(toMap());
+
+  factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

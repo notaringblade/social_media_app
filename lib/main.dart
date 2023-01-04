@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xff222222),
-        brightness: Brightness.light,
+        brightness: Brightness.dark,
         primarySwatch: Colors.grey,
         iconTheme: IconThemeData(color: Colors.white),
         textTheme: TextTheme(

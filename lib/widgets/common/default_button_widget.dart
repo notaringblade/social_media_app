@@ -19,7 +19,7 @@ class DefaultButtonWidget extends StatelessWidget {
         padding: const EdgeInsets.all(15),
         margin: const EdgeInsets.symmetric(horizontal: 25),
         decoration: BoxDecoration(
-            color: const Color(0xffffffff),
+            color: Colors.grey.shade200,
             borderRadius: BorderRadius.circular(12),
             boxShadow: const [
               BoxShadow(

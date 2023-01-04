@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media_app/widgets/common/custom_loading_widget.dart';
 import 'package:social_media_app/widgets/common/default_button_widget.dart';
 import 'package:social_media_app/widgets/common/text_field.dart';
 
@@ -21,11 +22,7 @@ class _LoginPageState extends State<LoginPage> {
       showDialog(
           context: context,
           builder: (context) {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: Colors.white,
-              ),
-            );
+            return CustomLoading();
           });
       try {
         if (emailController.text.isNotEmpty &&
@@ -157,3 +154,5 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+

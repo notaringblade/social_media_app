@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:social_media_app/main_pages/explore_page.dart';
@@ -15,32 +16,31 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int currentIndex = 0;
 
-    List<Widget>screens = const [
-      HomePage(),
-      FriendsPage(),
-      ExplorePage(),
-      ProfilePage()
+  final user = FirebaseAuth.instance.currentUser;
 
-    ];
+  List<Widget> screens = [
+    HomePage(),
+    FriendsPage(),
+    ExplorePage(),
+    ProfilePage()
+  ];
 
-  
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
           leading: const Icon(Icons.menu, size: 24, color: Colors.white),
           backgroundColor: Colors.transparent,
         ),
-      body: screens[currentIndex],
+        body: IndexedStack(children: [screens[currentIndex]]),
         backgroundColor: const Color(0xff222222),
         bottomNavigationBar: Container(
           decoration: const BoxDecoration(
             border: Border(top: BorderSide(color: Colors.white, width: 1)),
             color: Colors.transparent,
           ),
-          child:  Padding(
+          child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
             child: GNav(
               activeColor: Colors.black,
@@ -70,7 +70,7 @@ class _MainPageState extends State<MainPage> {
                   text: "User",
                 ),
               ],
-              onTabChange:  (index) {
+              onTabChange: (index) {
                 setState(() {
                   currentIndex = index;
                   // print(currentIndex);

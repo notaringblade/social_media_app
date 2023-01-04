@@ -14,94 +14,97 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-    TextEditingController usernameController = TextEditingController();
-    TextEditingController firstNameController = TextEditingController();
-    TextEditingController lastNameController = TextEditingController();
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-    TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
 
-    bool checkPassword() {
-      if (confirmPasswordController.text.trim() ==
-          passwordController.text.trim()) {
-        return true;
-      } else {
-        return false;
-      }
-    }
+  
 
-    void signUp() async {
 
-      
+  Future addUserData() async {
 
+    UserModel user = UserModel(
+      firstName: firstNameController.text,
+      lastName: lastNameController.text,
+      username: usernameController.text,
+      email: emailController.text,
+      friends: [],
+    );
+
+    await FirebaseFirestore.instance
+              .collection('users')
+              .add(user.toMap());
+  }
+
+  Future signUp() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Colors.white,
+            ),
+          );
+        });
+
+    
+
+    try {
       if (emailController.text.isNotEmpty &&
+          usernameController.text.isNotEmpty &&
           firstNameController.text.isNotEmpty &&
-          lastNameController.text.isNotEmpty &&
-          usernameController.text.isNotEmpty) {
-        UserModel user = UserModel(
-          firstName: firstNameController.text,
-          lastName: lastNameController.text,
-          username: usernameController.text,
-          email: emailController.text,
-          friends: [],
-        );
-
-        showDialog(
-            context: context,
-            builder: (context) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                ),
-              );
-            });
-        
-        try {
-        
-          if (checkPassword()) {
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                email: emailController.text, password: passwordController.text);
-            await FirebaseFirestore.instance
-                .collection('users')
-                .add(user.toMap());
-
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              snackBarMessage('Password Do Not Match', Colors.red),
-            );
-          }
-          
-        } on FirebaseAuthException catch (e) {
-          if (e.code == 'email-already-in-use') {
-            ScaffoldMessenger.of(context).showSnackBar(
-              snackBarMessage('This Email Is Taken', Colors.red),
-            );
-          } else if (e.code == 'weak-password') {
-            ScaffoldMessenger.of(context).showSnackBar(
-              snackBarMessage('Password Is Too Weak', Colors.red),
-            );
-          } else if (e.code == 'invalid-email') {
-            ScaffoldMessenger.of(context).showSnackBar(
-              snackBarMessage('Email is Invalid', Colors.red),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              snackBarMessage('Please Check Your Email And Password', Colors.red),
-            );
-          }
-        Navigator.pop(context);
+          lastNameController.text.isNotEmpty) {
+        if (checkPassword()) {
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: emailController.text, password: passwordController.text);
+          addUserData();
+        }else{
+          ScaffoldMessenger.of(context).showSnackBar(
+            snackBarMessage('Passwords Do Not Match', Colors.red),
+          );
+        } 
+      }else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            snackBarMessage('Please Provide Required Data', Colors.red),
+          );
         }
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          snackBarMessage('This Email Is Taken', Colors.red),
+        );
+      } else if (e.code == 'weak-password') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          snackBarMessage('Password Is Too Weak', Colors.red),
+        );
+      } else if (e.code == 'invalid-email') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          snackBarMessage('Email is Invalid', Colors.red),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          snackBarMessage('Please Provide Required Data', Colors.red),
+          snackBarMessage('Please Check Your Email And Password', Colors.red),
         );
-        Navigator.pop(context);
-
       }
+      Navigator.pop(context);
     }
+  }
+
+  bool checkPassword() {
+    if (confirmPasswordController.text.trim() ==
+        passwordController.text.trim()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       // resizeToAvoidBottomInset: false,
       body: SafeArea(
