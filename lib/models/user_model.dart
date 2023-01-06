@@ -8,13 +8,17 @@ class UserModel extends Equatable {
   final String lastName;
   final String username;
   final String email;
-  final List<String> friends;
+  final String uid;
+  final List<String> followers;
+  final List<String> following;
   const UserModel({
     required this.firstName,
     required this.lastName,
     required this.username,
     required this.email,
-    required this.friends,
+    required this.uid,
+    required this.followers,
+    required this.following,
   });
   
   @override
@@ -25,7 +29,9 @@ class UserModel extends Equatable {
       lastName,
       username,
       email,
-      friends,
+      uid,
+      followers,
+      following,
     ];
   }
 
@@ -34,14 +40,18 @@ class UserModel extends Equatable {
     String? lastName,
     String? username,
     String? email,
-    List<String>? friends,
+    String? uid,
+    List<String>? followers,
+    List<String>? following,
   }) {
     return UserModel(
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       username: username ?? this.username,
       email: email ?? this.email,
-      friends: friends ?? this.friends,
+      uid: uid ?? this.uid,
+      followers: followers ?? this.followers,
+      following: following ?? this.following,
     );
   }
 
@@ -51,7 +61,9 @@ class UserModel extends Equatable {
       'lastName': lastName,
       'username': username,
       'email': email,
-      'friends': friends,
+      'uid': uid,
+      'followers': followers,
+      'following': following,
     };
   }
 
@@ -61,16 +73,16 @@ class UserModel extends Equatable {
       lastName: map['lastName'] as String,
       username: map['username'] as String,
       email: map['email'] as String,
-      friends: List<String>.from((map['friends'] as List<String>),
+      uid: map['uid'] as String,
+      followers: List<String>.from((map['followers'] as List<String>)),
+      following: List<String>.from((map['following'] as List<String>),
     ));
   }
-
-
-
-  @override
-  bool get stringify => true;
 
   String toJson() => json.encode(toMap());
 
   factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  bool get stringify => true;
 }

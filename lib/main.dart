@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:social_media_app/auth/login_page.dart';
 import 'package:social_media_app/auth/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:social_media_app/config/app_router.dart';
 import 'firebase_options.dart';
 
 
@@ -19,20 +20,22 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Demo',
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xff222222),
         brightness: Brightness.dark,
         primarySwatch: Colors.grey,
-        iconTheme: IconThemeData(color: Colors.white),
-        textTheme: TextTheme(
+        iconTheme: const IconThemeData(color: Colors.white),
+        textTheme: const TextTheme(
           bodyText1: TextStyle(
             color: Colors.white
           )
         )
       ),
-      home: const  AuthPage(),
+      routerDelegate: AppRouter().router.routerDelegate,
+      routeInformationParser: AppRouter().router.routeInformationParser,
+      routeInformationProvider: AppRouter().router.routeInformationProvider,
     );
   }
 }

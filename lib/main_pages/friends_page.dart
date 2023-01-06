@@ -1,8 +1,10 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media_app/bloc/bloc/user_data_bloc.dart';
+import 'package:social_media_app/models/user_model.dart';
+import 'package:social_media_app/screens/other_user_screen.dart';
+import 'package:social_media_app/widgets/common/custom_loading_widget.dart';
 import 'package:social_media_app/widgets/user%20display%20data/users_data.dart';
 
 class FriendsPage extends StatefulWidget {
@@ -14,58 +16,99 @@ class FriendsPage extends StatefulWidget {
   State<FriendsPage> createState() => _FriendsPageState();
 }
 
-class _FriendsPageState extends State<FriendsPage> {
-  User? user = FirebaseAuth.instance.currentUser;
+class _FriendsPageState extends State<FriendsPage>
+    with AutomaticKeepAliveClientMixin {
+  List<dynamic> followingIds = [];
+  String currentUserId = '';
 
-  List<dynamic> docIds = [];
+  User? currentUser = FirebaseAuth.instance.currentUser!;
+  CollectionReference userRef = FirebaseFirestore.instance.collection('users');
 
-  Future getDocIds() async {
-    await FirebaseFirestore.instance
-        .collection('users')
-        .where('email', isEqualTo: user!.email)
-        .get()
-        .then((snapshot) => snapshot.docs.forEach((element) {
-              // docIds.add(element.data()['friends'].toString());
-              docIds = element.data()['friends'];
-            }));
-  }
-
-  late final Future future;
   @override
   void initState() {
+    userRef
+        .where('uid', isEqualTo: currentUser?.uid)
+        .get()
+        .then((value) => value.docs.forEach((element) {
+              currentUserId = element.reference.id;
+            }));
     super.initState();
-    future = getDocIds();
+  }
+
+  Stream fetchUsers() async* {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: currentUser?.email)
+        .get()
+        .then((value) => value.docs.forEach((element) {
+              followingIds = element.data()['following'];
+            }));
+    userRef.snapshots();
   }
 
   Widget build(BuildContext context) {
+    super.build(context);
     return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text(
-            "FriendsPage",
+            "Following",
             style: TextStyle(color: Colors.white),
           ),
-          FutureBuilder(
-            future: future,
+          FloatingActionButton(onPressed: () {
+            setState(() {});
+          }),
+          StreamBuilder(
+            stream: fetchUsers(),
             builder: (context, snapshot) {
-              return Expanded(
-                child: ListView.builder(
-                  itemCount: docIds.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {},
-                      child: ListTile(
-                          title: UsersData(id: docIds[index],)
-                      )
-                    );
-                  },
-                ),
-              );
+              if (followingIds.isEmpty) {
+                return const Center(
+                  child: Text("Not Following Anyone"),
+                );
+              } else {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: followingIds.length,
+                    itemBuilder: (context, index) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OtherUserScreen(
+                                        userId: followingIds[index],
+                                        ),
+                                  )).then((_) {setState(() {
+                                    
+                                  });});
+                            },
+                            child: Container(
+                              width: 300,
+                              child: ListTile(
+                                title: UsersData(
+                                  id: followingIds[index],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                );
+              }
             },
           )
         ],
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

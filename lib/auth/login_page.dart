@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media_app/services/auth_service.dart';
 import 'package:social_media_app/widgets/common/custom_loading_widget.dart';
 import 'package:social_media_app/widgets/common/default_button_widget.dart';
 import 'package:social_media_app/widgets/common/text_field.dart';
@@ -15,44 +16,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
+    final AuthService auth = AuthService();
+
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
-
-    void signIn() async {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return CustomLoading();
-          });
-      try {
-        if (emailController.text.isNotEmpty &&
-            passwordController.text.isNotEmpty) {
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-              email: emailController.text, password: passwordController.text);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            snackBarMessage('Please Enter Required Information'),
-          );
-        }
-        Navigator.pop(context);
-        // Navigator.pop(context);
-      } on FirebaseAuthException catch (e) {
-        if (e.code == "user-not-found") {
-          ScaffoldMessenger.of(context).showSnackBar(
-            snackBarMessage('Please Check Your Email'),
-          );
-        } else if (e.code == "wrong-password") {
-          ScaffoldMessenger.of(context).showSnackBar(
-            snackBarMessage('Please Check Your Password'),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            snackBarMessage('Please Check Your Email And Password'),
-          );
-        }
-        Navigator.pop(context);
-      }
-    }
 
     return Scaffold(
       // resizeToAvoidBottomInset: false,
@@ -111,7 +78,9 @@ class _LoginPageState extends State<LoginPage> {
               height: 20,
             ),
             DefaultButtonWidget(
-              onTap: signIn,
+              onTap: (){
+                auth.signIn(context, emailController.text, passwordController.text);
+              },
               buttonName: 'Sign In',
             ),
             const SizedBox(
@@ -129,8 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: const Text(
                       "   Sign Up",
                       style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold),
+                          color: Colors.blue, fontWeight: FontWeight.bold),
                     ))
               ],
             ),
@@ -154,5 +122,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-

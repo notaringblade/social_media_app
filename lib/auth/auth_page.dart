@@ -14,9 +14,9 @@ const AuthPage({ Key? key }) : super(key: key);
         stream: FirebaseAuth.instance.authStateChanges() ,
         builder: (context, snapshot) {
           if(snapshot.hasData){
-            return MainPage();
+            return const MainPage();
           }else{
-            return LoginOrSignUp();
+            return const LoginOrSignUp();
           }
         },
       )
