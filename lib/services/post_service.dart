@@ -49,6 +49,6 @@ class PostService {
             created: post['created']))
         .toList();
     postList = list;
-    print(postList);
+    print(postList.length);
   }
 }

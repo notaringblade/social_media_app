@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:social_media_app/models/post_model.dart';
 import 'package:social_media_app/services/post_service.dart';
 import 'package:social_media_app/widgets/common/custom_loading_widget.dart';
+import 'package:social_media_app/widgets/post%20Widgets/display_posts.dart';
+import 'package:social_media_app/widgets/user%20display%20data/users_data.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({
@@ -20,6 +22,8 @@ class _ProfilePageState extends State<ProfilePage>
   final PostService _postService = PostService();
   CollectionReference userRef = FirebaseFirestore.instance.collection('users');
 
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+
   List<PostModel> postList = [];
 
   @override
@@ -34,11 +38,25 @@ class _ProfilePageState extends State<ProfilePage>
     return SizedBox(
       child: Center(
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
+          // mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Text(
               "Profile Page",
               style: TextStyle(color: Colors.white),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 18),
+              child: Column(
+                children: [
+                  UserDisplay(users: users, userId: user!.uid, ),
+                  TextButton(onPressed: () {
+                    
+                  }, child: Text("Edit Profile"))
+                ],
+              ),
             ),
             const SizedBox(
               height: 20,
@@ -48,42 +66,7 @@ class _ProfilePageState extends State<ProfilePage>
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
-            FutureBuilder(
-              future: _postService.fetchPosts(user!.uid),
-              builder: (context, snapshot) {
-                if (_postService.postList.isNotEmpty) {
-                  return Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: _postService.postList.length,
-                      itemBuilder: (context, index) {
-                        var time =
-                            _postService.postList[index].created.toDate();
-                        return Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              GestureDetector(
-                                onTap: () {},
-                                child: ListTile(
-                                  title:
-                                      Text(_postService.postList[index].post),
-                                  subtitle: Text(time.toIso8601String()),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                } else {
-                  return const CustomLoading();
-                }
-              },
-            ),
+            DisplayPosts(userId: user!.uid, postService: _postService, user: user,)
           ],
         ),
       ),

@@ -76,7 +76,7 @@ class UserModel extends Equatable {
       uid: map['uid'] as String,
       followers: List<String>.from((map['followers'] as List<String>)),
       following: List<String>.from((map['following'] as List<String>),
-    ));
+      ));
   }
 
   String toJson() => json.encode(toMap());

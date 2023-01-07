@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/models/post_model.dart';
 import 'package:social_media_app/services/auth_service.dart';
+import 'package:social_media_app/services/fallback_services.dart';
 import 'package:social_media_app/services/post_service.dart';
 import 'package:social_media_app/widgets/common/text_field.dart';
 
@@ -15,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final PostService _postService =  PostService();
+  final FallBackServices _fallback = FallBackServices();
   final user = FirebaseAuth.instance.currentUser!;
   final postController = TextEditingController();
 
@@ -44,6 +46,12 @@ class _HomePageState extends State<HomePage> {
           "Welcome ${user.email}",
           style: TextStyle(color: Colors.white),
         ),
+        // FloatingActionButton(onPressed: () {
+
+        //   _fallback.addSubCollections();
+        // },
+        // child: Text("Fallback"),
+        // ),
         OutlinedButton.icon(
           onPressed: () {
             AuthService().logout();

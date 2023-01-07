@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:social_media_app/auth/login_page.dart';
-import 'package:social_media_app/auth/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:social_media_app/config/app_router.dart';
 import 'firebase_options.dart';

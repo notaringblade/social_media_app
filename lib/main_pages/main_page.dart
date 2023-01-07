@@ -23,9 +23,9 @@ class _MainPageState extends State<MainPage>
 
   List<Widget> screens = [
     const HomePage(),
-    FriendsPage(),
+    // FriendsPage(),
     const ExplorePage(),
-    ProfilePage()
+    const ProfilePage()
   ];
 
   @override
@@ -57,9 +57,9 @@ class _MainPageState extends State<MainPage>
         backgroundColor: Colors.transparent,
       ),
       body: PageView(
-        children: screens,
         controller: pageController,
         onPageChanged: onPageChanged,
+        children: screens,
       ),
       backgroundColor: const Color(0xff222222),
       bottomNavigationBar: Container(
@@ -86,10 +86,10 @@ class _MainPageState extends State<MainPage>
                 icon: Icons.home_outlined,
                 text: "Home",
               ),
-              GButton(
-                icon: Icons.people_outline_outlined,
-                text: "Friends",
-              ),
+              // GButton(
+              //   icon: Icons.people_outline_outlined,
+              //   text: "Friends",
+              // ),
               GButton(
                 icon: Icons.explore_outlined,
                 text: "Discover",

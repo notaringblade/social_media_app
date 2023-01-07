@@ -1,65 +1,94 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:social_media_app/screens/other_user_screen.dart';
-import 'package:social_media_app/widgets/common/custom_loading_widget.dart';
+import 'package:go_router/go_router.dart';
+import 'package:social_media_app/config/router_constants.dart';
 
-class UsersData extends StatefulWidget {
-  final String id;
+class UserDisplay extends StatefulWidget {
+  const UserDisplay({
+    Key? key,
+    required this.users,
+    required this.userId,
+  }) : super(key: key);
 
-  const UsersData({Key? key, required this.id}) : super(key: key);
-
+  final CollectionReference<Object?> users;
+  final String userId;
   @override
-  State<UsersData> createState() => _UsersDataState();
+  State<UserDisplay> createState() => _UserDisplayState();
 }
 
-class _UsersDataState extends State<UsersData> {
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-  User? user = FirebaseAuth.instance.currentUser!;
-
-  String currentUserId = '';
-
-  Future getDocIds() async {
-    await FirebaseFirestore.instance
-        .collection('users')
-        .where('email', isEqualTo: user?.email)
-        .get()
-        .then((snapshot) => snapshot.docs.forEach((element) {
-              print(element.reference);
-              currentUserId = element.reference.id;
-            }));
-  }
-
+class _UserDisplayState extends State<UserDisplay> {
+ 
   @override
   void initState() {
-    getDocIds();
+    // TODO: implement initState
+    // widget.refresh;
+    // setState(() {
+      
+    // });
     super.initState();
   }
-
-  @override
   Widget build(BuildContext context) {
+    setState(() {
+      
+    });
     return FutureBuilder<DocumentSnapshot>(
-      future: users.doc(widget.id).get(),
+      future: widget.users.doc(widget.userId).get(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data =
-              snapshot.data!.data() as Map<String, dynamic>;
 
-          return Container(
-            // color: Colors.white,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
+        if (snapshot.connectionState ==
+            ConnectionState.done) {
+          Map<String, dynamic> data = snapshot.data!
+              .data() as Map<String, dynamic>;
+            var followers = data['followers'].length;
+          return SizedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('username: ${data['username']}'),
-                Text('name: ${data['firstName']} ${data['lastName']} '),
-                Text('email: ${data['email']} '),
+                Column(
+                  mainAxisAlignment:
+                      MainAxisAlignment.start,
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                  children: [
+                    Text('username: ${data['username']}'),
+                    Text(
+                        'name: ${data['firstName']} ${data['lastName']}'),
+                    // Text('email: ${widget.currentUserId} '),
+                    // Text( "followers: ${arrayLength.toString()}"),
+                  ],
+                ),
+                Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        
+                        context.pushNamed(RouteConstants.followers,
+                                params: {'id': widget.userId});
+                      },
+                      child: Column(
+                        children: [
+                          Text('followers'),
+                          Text( followers.toString()),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 30,),
+                    Column(
+                      children: [
+                        Text('following'),
+                        Text('${data['following'].length}'),
+                      ],
+                    )
+
+                  ],
+                )
               ],
             ),
           );
         }
-        return const CustomLoading();
+        return Container();
       },
     );
   }

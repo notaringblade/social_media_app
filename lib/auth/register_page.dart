@@ -89,11 +89,6 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             DefaultButtonWidget(
               onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return const CustomLoading();
-                    });
                 auth.signUp(
                     emailController.text,
                     firstNameController.text,
@@ -102,7 +97,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     passwordController.text,
                     confirmPasswordController.text,
                     context);
-                  Navigator.pop(context);
                 WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
               },
               buttonName: 'Sign Up',

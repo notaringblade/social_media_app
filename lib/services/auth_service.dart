@@ -37,34 +37,41 @@ class AuthService {
             Future.delayed(const Duration(seconds: 2));
             final loading = Navigator.pop(context);
             final valid = await usernameCheck(username);
-            if (valid) {
-              
-              UserCredential user = await FirebaseAuth.instance
-                  .createUserWithEmailAndPassword(
-                      email: email, password: password);
+            if (checkEmail(email)) {
+              if (valid) {
+                message.showSnackBar(
+                    snackBarMessage("Success!! Logging In", Colors.green));
+                UserCredential user = await FirebaseAuth.instance
+                    .createUserWithEmailAndPassword(
+                        email: email, password: password);
 
-              // loading;
-              await FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(user.user!.uid)
-                  .set(UserModel(
+
+                await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(user.user!.uid)
+                    .set(UserModel(
                       firstName: firstname,
                       lastName: lastname,
                       username: username,
                       uid: user.user!.uid,
                       email: email,
                       followers: [],
-                      following: []).toMap());
-                    
-                      message.showSnackBar(
-                  snackBarMessage("Success!! Logging In", Colors.green));
+                      following: []
+                    ).toMap());
 
-                      
+                
+              } else {
+                // loading;
+                // ignore: use_build_context_synchronously
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  snackBarMessage('username is taken', Colors.red),
+                );
+              }
             } else {
-              loading;
-              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
-                snackBarMessage('username is taken', Colors.red),
+                snackBarMessage(
+                    'You can only login with a chowgules account', Colors.red),
               );
             }
           } else {
@@ -115,6 +122,13 @@ class AuthService {
     }
   }
 
+  bool checkEmail(String email) {
+    if (email.endsWith('@chowgules.ac.in')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   //Login
 
   Future signIn(BuildContext context, String email, String password) async {
@@ -154,10 +168,9 @@ class AuthService {
 
   //logut
   Future logout() async {
-    try{
-
-    await FirebaseAuth.instance.signOut();
-    }on FirebaseAuthException catch(e){
+    try {
+      await FirebaseAuth.instance.signOut();
+    } on FirebaseAuthException catch (e) {
       print(e);
     }
   }
