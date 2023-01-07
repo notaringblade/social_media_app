@@ -27,35 +27,7 @@ class _ExplorePageState extends State<ExplorePage> {
     currentUserId = user!.uid;
     // _authUser.fetchUsers();
     super.initState();
-    print(_authUser.usersList);
   }
-
-  // fetchUsers() async {
-  //   var users = await FirebaseFirestore.instance
-  //       .collection('users')
-  //       .where('uid', isNotEqualTo: user!.uid)
-  //       .get();
-  //   mapUsers(users);
-  // }
-
-  // mapUsers(QuerySnapshot<Map<String, dynamic>> users) {
-  //   var list = users.docs
-  //       .map((user) => UserModel(
-  //           firstName: user['firstName'],
-  //           lastName: user['lastName'],
-  //           username: user['username'],
-  //           email: user['email'],
-  //           uid: user['uid'],
-  //           followers: List.from(user['followers']),
-  //           following: List.from(user['following'])
-  //           ))
-  //       .toList();
-  //   if (mounted) {
-  //     setState(() {
-  //       usersList = list;
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -67,38 +39,39 @@ class _ExplorePageState extends State<ExplorePage> {
             "Explore Page ",
             style: TextStyle(color: Colors.white),
           ),
-          FutureBuilder(
-            future: _authUser.fetchUsers(),
+          StreamBuilder(
+            stream: _authUser.fetchUsers(user!.uid),
             builder: (context, snapshot) {
               print(_authUser.usersList);
-            return Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _authUser.usersList.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            context.pushNamed('user',
-                                params: {'id': _authUser.usersList[index].uid});
-                          },
-                          child: ListTile(
-                            title: Text(_authUser.usersList[index].username),
-                            subtitle: Text(
-                                "${_authUser.usersList[index].firstName} ${_authUser.usersList[index].lastName}"),
+              return Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _authUser.usersList.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              context.pushNamed('user', params: {
+                                'id': _authUser.usersList[index].uid
+                              });
+                            },
+                            child: ListTile(
+                              title: Text(_authUser.usersList[index].username),
+                              subtitle: Text(
+                                  "${_authUser.usersList[index].firstName} ${_authUser.usersList[index].lastName}"),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            );
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              );
             },
           )
         ],

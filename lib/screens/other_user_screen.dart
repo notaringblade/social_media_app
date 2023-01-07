@@ -50,7 +50,7 @@ class _OtherUserScreenState extends State<OtherUserScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(
-                height: 70,
+                height: 40,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 18),
@@ -58,31 +58,32 @@ class _OtherUserScreenState extends State<OtherUserScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     UserDisplay(users: users, userId: widget.userId),
-                    FutureBuilder(
-                      future:
+                    StreamBuilder(
+                      stream:
                           _authUser.isFollowingCheck(user!.uid, widget.userId),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
-                          return _authUser.isFollowingValue
-                              ? TextButton(
-                                  onPressed: ()  async{
-                                    await _authUser.unfolloUser(widget.userId);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        snackBarMessage(
-                                            'Unfollowed User',
-                                            Colors.white));
-                                    setState(() {});
-                                  },
-                                  child: const Text("unfollow"))
-                              : 
-                                   TextButton(
-                                      onPressed: ()  async{
-                                         await _authUser
+                          return widget.userId == user!.uid
+                              ? Container()
+                              : _authUser.isFollowingValue
+                                  ? TextButton(
+                                      onPressed: () async {
+                                        await _authUser
+                                            .unfolloUser(widget.userId);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBarMessage(
+                                                'Unfollowed User',
+                                                Colors.white));
+                                        setState(() {});
+                                      },
+                                      child: const Text("unfollow"))
+                                  : TextButton(
+                                      onPressed: () async {
+                                        await _authUser
                                             .followUser(widget.userId);
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackBarMessage(
-                                                'Followed user',
-                                                Colors.white));
+                                                'Followed user', Colors.white));
                                         setState(() {});
                                       },
                                       child: const Text("follow"));

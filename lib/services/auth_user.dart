@@ -10,10 +10,12 @@ class AuthUser {
 
   List<UserModel> usersList = [];
 
+  List docIds = [];
+
   CollectionReference userFollowings =
       FirebaseFirestore.instance.collection('users');
 
-  Future isFollowingCheck(String uid, String otherUid) async {
+  Stream isFollowingCheck(String uid, String otherUid) async* {
     DocumentSnapshot snap = await userFollowings.doc(uid).get();
 
     List following = (snap.data()! as dynamic)['following'];
@@ -45,16 +47,15 @@ class AuthUser {
     });
   }
 
-
-  Future fetchUsers() async {
+  Stream fetchUsers(uid) async* {
     var users = await FirebaseFirestore.instance
         .collection('users')
-        .where('uid', isNotEqualTo: user!.uid)
+        .where('uid', isNotEqualTo: uid)
         .get();
     mapUsers(users);
   }
 
-   mapUsers(QuerySnapshot<Map<String, dynamic>> users) {
+  mapUsers(QuerySnapshot<Map<String, dynamic>> users) {
     var list = users.docs
         .map((user) => UserModel(
             firstName: user['firstName'],
@@ -63,11 +64,41 @@ class AuthUser {
             email: user['email'],
             uid: user['uid'],
             followers: List.from(user['followers']),
-            following: List.from(user['following'])
-            ))
+            following: List.from(user['following'])))
         .toList();
 
-      usersList = list;
+    usersList = list;
+    print(usersList);
   }
 
+  Future fetchFollowers(uid) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: uid)
+        .get()
+        .then((value) => value.docs.forEach((element) {
+              docIds = element.data()['followers'];
+            }));
+
+    for (int i = 0; i <= docIds.length; i++) {
+      var users = await FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: docIds[i])
+        // .where('uid', isNotEqualTo: user!.uid)
+        .get();
+
+        mapUsers(users);
+    // mapUsers(users);
+    }
+  }
+
+  // Future mapFollowers(uid) async {
+  //    var users = await FirebaseFirestore.instance
+  //       .collection('users')
+  //       .where('uid', isEqualTo: uid)
+  //       .get();
+
+  //   mapUsers(users);
+  //   // print(users);
+  // }
 }
