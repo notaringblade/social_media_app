@@ -65,7 +65,7 @@ class _UserDisplayState extends State<UserDisplay> {
                       onTap: () {
                         
                         context.pushNamed(RouteConstants.followers,
-                                params: {'id': widget.userId});
+                                params: {'id': widget.userId, 'type': 'followers'});
                       },
                       child: Column(
                         children: [
@@ -75,11 +75,17 @@ class _UserDisplayState extends State<UserDisplay> {
                       ),
                     ),
                     SizedBox(width: 30,),
-                    Column(
-                      children: [
-                        Text('following'),
-                        Text('${data['following'].length}'),
-                      ],
+                    GestureDetector(
+                      onTap: () {
+                        context.pushNamed(RouteConstants.followers,
+                                params: {'id': widget.userId, 'type': 'following'});
+                      },
+                      child: Column(
+                        children: [
+                          Text('following'),
+                          Text('${data['following'].length}'),
+                        ],
+                      ),
                     )
 
                   ],

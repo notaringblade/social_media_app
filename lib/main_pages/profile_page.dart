@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/models/post_model.dart';
 import 'package:social_media_app/services/post_service.dart';
-import 'package:social_media_app/widgets/common/custom_loading_widget.dart';
 import 'package:social_media_app/widgets/post%20Widgets/display_posts.dart';
 import 'package:social_media_app/widgets/user%20display%20data/users_data.dart';
 

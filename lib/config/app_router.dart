@@ -33,11 +33,12 @@ class AppRouter {
             },
           ),
           GoRoute(
-            path: 'followes/:id',
+            path: 'followes/:id/:type',
             name: RouteConstants.followers,
             builder: (BuildContext context, GoRouterState state) {
               return FollowersScreen(
                 userId: state.params['id']!,
+                type: state.params['type']!,
               );
             },
           ),

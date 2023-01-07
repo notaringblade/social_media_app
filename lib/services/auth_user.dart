@@ -56,7 +56,7 @@ class AuthUser {
   }
 
   mapUsers(QuerySnapshot<Map<String, dynamic>> users) {
-    var list = users.docs
+    usersList= users.docs
         .map((user) => UserModel(
             firstName: user['firstName'],
             lastName: user['lastName'],
@@ -67,38 +67,24 @@ class AuthUser {
             following: List.from(user['following'])))
         .toList();
 
-    usersList = list;
-    print(usersList);
   }
 
-  Future fetchFollowers(uid) async {
+  Future fetchFollowers(uid, type) async {
     await FirebaseFirestore.instance
         .collection('users')
         .where('uid', isEqualTo: uid)
         .get()
         .then((value) => value.docs.forEach((element) {
-              docIds = element.data()['followers'];
+              docIds = element.data()[type];
             }));
 
-    for (int i = 0; i <= docIds.length; i++) {
-      var users = await FirebaseFirestore.instance
-        .collection('users')
-        .where('uid', isEqualTo: docIds[i])
-        // .where('uid', isNotEqualTo: user!.uid)
-        .get();
-
-        mapUsers(users);
-    // mapUsers(users);
-    }
+    // for (int i = 0; i <= docIds.length; i++) {
+    //   print(i);
+    //   var users = await FirebaseFirestore.instance
+    //       .collection('users')
+    //       .where('uid', isEqualTo: docIds[i])
+    //       .get();
+    //   await mapUsers(users);
+    // }
   }
-
-  // Future mapFollowers(uid) async {
-  //    var users = await FirebaseFirestore.instance
-  //       .collection('users')
-  //       .where('uid', isEqualTo: uid)
-  //       .get();
-
-  //   mapUsers(users);
-  //   // print(users);
-  // }
 }
