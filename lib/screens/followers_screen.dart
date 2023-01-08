@@ -27,11 +27,7 @@ class _FollowersScreenState extends State<FollowersScreen> {
             const SizedBox(height: 40,),
              Text(widget.type),
             const SizedBox(height: 40,),
-            FloatingActionButton(onPressed: () {
-              setState(() {
-                
-              });
-            },),
+            const SizedBox(height: 20,),
             FollowDisplay(authUser: _authUser, id: widget.userId, type: widget.type,)
         ],
       ),

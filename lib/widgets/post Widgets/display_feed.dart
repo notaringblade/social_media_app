@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:social_media_app/config/router_constants.dart';
 import 'package:social_media_app/models/user_model.dart';
 import 'package:social_media_app/services/auth_user.dart';
