@@ -21,13 +21,13 @@ class FollowDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _authUser.fetchFollowers(id, type),
+    return StreamBuilder(
+      stream: _authUser.fetchFollowers(id, type),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           // print(_authUser.usersList);
           if(_authUser.docIds.isNotEmpty){
-
+            print(_authUser.docIds);
           return Expanded(
             child: ListView.builder(
               itemCount: _authUser.docIds.length,

@@ -35,7 +35,7 @@ class PostService {
     var posts = await FirebaseFirestore.instance
         .collection('posts')
         .where('uid', isEqualTo: id)
-        .orderBy('post', descending: true)
+        .orderBy('created', descending: true)
         .get();
     mapPosts(posts);
   }
@@ -49,6 +49,18 @@ class PostService {
             created: post['created']))
         .toList();
     postList = list;
-    print(postList.length);
+    // print(list);
+  }
+
+  Stream fetchFeed(List uids) async* {
+    var feedPosts = await FirebaseFirestore.instance
+        .collection('posts')
+        .where('uid', whereIn: uids)
+        .orderBy('created', descending: true)
+        .get();
+
+    mapPosts(feedPosts);
+
+    // print(feedPosts);
   }
 }

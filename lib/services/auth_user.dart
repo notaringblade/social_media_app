@@ -12,6 +12,15 @@ class AuthUser {
 
   List docIds = [];
 
+  // UserModel thisUser = UserModel(
+  //           firstName: '',
+  //           lastName: '',
+  //           username: '',
+  //           email: '',
+  //           uid: '',
+  //           followers: [],
+  //           following: []);
+
   CollectionReference userFollowings =
       FirebaseFirestore.instance.collection('users');
 
@@ -56,7 +65,7 @@ class AuthUser {
   }
 
   mapUsers(QuerySnapshot<Map<String, dynamic>> users) {
-    usersList= users.docs
+    usersList = users.docs
         .map((user) => UserModel(
             firstName: user['firstName'],
             lastName: user['lastName'],
@@ -66,10 +75,22 @@ class AuthUser {
             followers: List.from(user['followers']),
             following: List.from(user['following'])))
         .toList();
-
   }
 
-  Future fetchFollowers(uid, type) async {
+  mapUser(docUser) {
+    var user1 = docUser
+        .map((user) => UserModel(
+            firstName: user['firstName'],
+            lastName: user['lastName'],
+            username: user['username'],
+            email: user['email'],
+            uid: user['uid'],
+            followers: List.from(user['followers']),
+            following: List.from(user['following'])))
+        .toList();
+  }
+
+  Stream fetchFollowers(uid, type) async* {
     await FirebaseFirestore.instance
         .collection('users')
         .where('uid', isEqualTo: uid)
@@ -77,14 +98,22 @@ class AuthUser {
         .then((value) => value.docs.forEach((element) {
               docIds = element.data()[type];
             }));
+    print(docIds);
+  }
 
-    // for (int i = 0; i <= docIds.length; i++) {
-    //   print(i);
-    //   var users = await FirebaseFirestore.instance
-    //       .collection('users')
-    //       .where('uid', isEqualTo: docIds[i])
-    //       .get();
-    //   await mapUsers(users);
-    // }
+  Stream<UserModel> fetchThisUser(uid) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .snapshots()
+        .map((user) => UserModel(
+            firstName: user['firstName'],
+            lastName: user['lastName'],
+            username: user['username'],
+            email: user['email'],
+            uid: user['uid'],
+            followers: List.from(user['followers']),
+            following: List.from(user['following'])));
+    // mapUsers(user);
   }
 }

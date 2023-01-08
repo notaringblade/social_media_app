@@ -99,7 +99,7 @@ class _MainPageState extends State<MainPage>
                 text: "User",
               ),
             ],
-            onTabChange: onTapped,
+            onTabChange: onTapped
           ),
         ),
       ),

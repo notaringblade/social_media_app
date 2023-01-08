@@ -118,6 +118,7 @@ class _OtherUserScreenState extends State<OtherUserScreen> {
   SnackBar snackBarMessage(String s, Color color) {
     return SnackBar(
       duration: Duration(milliseconds: 800),
+      behavior: SnackBarBehavior.floating,
       backgroundColor: color,
       content: Text(
         s,

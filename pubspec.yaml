@@ -43,7 +43,7 @@ dependencies:
   equatable: ^2.0.5
   flutter_bloc: ^8.1.1
   go_router: ^6.0.0
-  provider: ^6.0.5
+  liquid_pull_to_refresh: ^3.0.1
 
 dev_dependencies:
   flutter_test:

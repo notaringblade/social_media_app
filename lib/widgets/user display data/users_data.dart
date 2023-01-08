@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:social_media_app/config/router_constants.dart';
+import 'package:social_media_app/widgets/common/custom_loading_widget.dart';
 
 class UserDisplay extends StatefulWidget {
   const UserDisplay({
@@ -18,14 +19,14 @@ class UserDisplay extends StatefulWidget {
 
 
 class _UserDisplayState extends State<UserDisplay> {
- 
+  late final future;
   @override
   void initState() {
     // TODO: implement initState
     // widget.refresh;
     // setState(() {
-      
     // });
+    future = widget.users.doc(widget.userId).get();
     super.initState();
   }
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class _UserDisplayState extends State<UserDisplay> {
       
     });
     return FutureBuilder<DocumentSnapshot>(
-      future: widget.users.doc(widget.userId).get(),
+      future: future,
       builder: (context, snapshot) {
 
         if (snapshot.connectionState ==
