@@ -41,10 +41,7 @@ class _HomePageState extends State<HomePage>
       Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Text(
-          //   "Welcome ${user.email}",
-          //   style: const TextStyle(color: Colors.white),
-          // ),
+          
 
                DisplayFeed(
                 userId: user.uid,
@@ -53,6 +50,7 @@ class _HomePageState extends State<HomePage>
                 ids: _authUser.docIds,
                 
               ),
+              SizedBox(height: 20,)
         ],
       ),
       Padding(

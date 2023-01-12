@@ -90,7 +90,7 @@ class AuthUser {
         .toList();
   }
 
-  Stream fetchFollowers(uid, type) async* {
+  Future fetchFollowers(uid, type) async {
     await FirebaseFirestore.instance
         .collection('users')
         .where('uid', isEqualTo: uid)

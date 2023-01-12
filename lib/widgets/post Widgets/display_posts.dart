@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:social_media_app/services/post_service.dart';
 import 'package:social_media_app/widgets/common/custom_loading_widget.dart';
 
-class DisplayPosts extends StatelessWidget {
+class DisplayPosts extends StatefulWidget {
   const DisplayPosts({
     Key? key,
     required this.userId,
@@ -14,22 +14,32 @@ class DisplayPosts extends StatelessWidget {
   final PostService _postService;
   final User? user;
   final String userId;
+  
 
   @override
+  State<DisplayPosts> createState() => _DisplayPostsState();
+}
+
+class _DisplayPostsState extends State<DisplayPosts> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   Widget build(BuildContext context) {
     return FutureBuilder(
-              future: _postService.fetchPosts(userId),
+              future: widget._postService.fetchPosts(widget.userId),
               builder: (context, snapshot) {
     if(snapshot.connectionState == ConnectionState.done){
 
-    if (_postService.postList.isNotEmpty) {
+    if (widget._postService.postList.isNotEmpty) {
       return Expanded(
         child: ListView.builder(
           shrinkWrap: true,
-          itemCount: _postService.postList.length,
+          itemCount: widget._postService.postList.length,
           itemBuilder: (context, index) {
             var time =
-                _postService.postList[index].created.toDate();
+                widget._postService.postList[index].created.toDate();
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: 12),
               child: Column(
@@ -40,7 +50,7 @@ class DisplayPosts extends StatelessWidget {
                     onTap: () {},
                     child: ListTile(
                       title:
-                          Text(_postService.postList[index].post),
+                          Text(widget._postService.postList[index].post),
                       subtitle: Text(time.toIso8601String()),
                     ),
                   ),

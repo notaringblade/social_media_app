@@ -19,14 +19,13 @@ class UserDisplay extends StatefulWidget {
 
 
 class _UserDisplayState extends State<UserDisplay> {
-  late final future;
   @override
   void initState() {
     // TODO: implement initState
     // widget.refresh;
     // setState(() {
     // });
-    future = widget.users.doc(widget.userId).get();
+    
     super.initState();
   }
   Widget build(BuildContext context) {
@@ -34,7 +33,7 @@ class _UserDisplayState extends State<UserDisplay> {
       
     });
     return FutureBuilder<DocumentSnapshot>(
-      future: future,
+      future:  widget.users.doc(widget.userId).get(),
       builder: (context, snapshot) {
 
         if (snapshot.connectionState ==

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/models/post_model.dart';
 import 'package:social_media_app/services/auth_user.dart';
@@ -48,65 +49,84 @@ class _OtherUserScreenState extends State<OtherUserScreen> {
               child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
+            // shrinkWrap: true,
             children: [
               const SizedBox(
                 height: 40,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 18),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    UserDisplay(users: users, userId: widget.userId),
-                    StreamBuilder(
-                      stream:
-                          _authUser.isFollowingCheck(user!.uid, widget.userId),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          return widget.userId == user!.uid
-                              ? Container()
-                              : _authUser.isFollowingValue
-                                  ? TextButton(
-                                      onPressed: () async {
-                                        await _authUser
-                                            .unfolloUser(widget.userId);
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBarMessage(
-                                                'Unfollowed User',
-                                                Colors.white));
-                                        setState(() {});
-                                      },
-                                      child: const Text("unfollow"))
-                                  : TextButton(
-                                      onPressed: () async {
-                                        await _authUser
-                                            .followUser(widget.userId);
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBarMessage(
-                                                'Followed user', Colors.white));
-                                        setState(() {});
-                                      },
-                                      child: const Text("follow"));
-                        } else {
-                          return Container();
-                        }
-                      },
-                    )
-                  ],
+              LiquidPullToRefresh(
+                animSpeedFactor: 5,
+                height: 50,
+                showChildOpacityTransition: false,
+                onRefresh: () async {},
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      UserDisplay(users: users, userId: widget.userId),
+                      StreamBuilder(
+                        stream:
+                            _authUser.isFollowingCheck(user!.uid, widget.userId),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            return Column(
+                              children: [
+                                widget.userId == user!.uid
+                                    ? Container()
+                                    : _authUser.isFollowingValue
+                                        ? TextButton(
+                                            onPressed: () async {
+                                              await _authUser
+                                                  .unfolloUser(widget.userId);
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(snackBarMessage(
+                                                      'Unfollowed User',
+                                                      Colors.white));
+                                              setState(() {});
+                                            },
+                                            child: const Text("unfollow"))
+                                        : TextButton(
+                                            onPressed: () async {
+                                              await _authUser
+                                                  .followUser(widget.userId);
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(snackBarMessage(
+                                                      'Followed user',
+                                                      Colors.white));
+                                              setState(() {});
+                                            },
+                                            child: const Text("follow")),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                const Text(
+                                  'User Posts',
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
+                      )
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(
-                height: 40,
-              ),
-              const Text(
-                'User Posts',
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(
-                height: 40,
-              ),
+              // Column(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+
+              //   ],
+              // ),
               DisplayPosts(
                   postService: _postService, user: user, userId: widget.userId)
+
               // : Text("No Posts")
             ],
           ));

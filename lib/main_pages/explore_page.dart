@@ -53,7 +53,7 @@ class _ExplorePageState extends State<ExplorePage>
                 child: LiquidPullToRefresh(
                   // animSpeedFactor: 0.5 ,
                   animSpeedFactor: 5,
-                  height: 70,
+                  height: 50,
                   showChildOpacityTransition: false,
                   onRefresh: refresh,
                   child: ListView.builder(

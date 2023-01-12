@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:social_media_app/config/router_constants.dart';
 import 'package:social_media_app/models/user_model.dart';
 import 'package:social_media_app/services/auth_user.dart';
@@ -34,10 +35,12 @@ class _DisplayFeedState extends State<DisplayFeed> {
     Color(0xffF1F7B5),
     Color(0xff9EA1D4),
   ];
+
+  
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: _authUser.fetchFollowers(widget.user!.uid, "following"),
+    return FutureBuilder(
+      future: _authUser.fetchFollowers(widget.user!.uid, "following"),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return StreamBuilder(
@@ -46,7 +49,10 @@ class _DisplayFeedState extends State<DisplayFeed> {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (_postService.postList.isNotEmpty) {
                   return Expanded(
-                    child: RefreshIndicator(
+                    child: LiquidPullToRefresh(
+                      animSpeedFactor: 5,
+                      height: 50,
+                      showChildOpacityTransition: false,
                       onRefresh: () async {
                         setState(() {});
                       },
@@ -87,35 +93,44 @@ class _DisplayFeedState extends State<DisplayFeed> {
                                             spreadRadius: 3),
                                       ],
                                       borderRadius: BorderRadius.circular(12),
-                                      color: colors[index % colors.length],
+                                      border: Border.all(
+                                          color: colors[index % colors.length],
+                                          width: 3),
+                                      color: Color(0xff222222),
                                     ),
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 12),
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        GestureDetector(
+                                        ListTile(
+                                          title: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                snapshot.data!.username,
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                time.toString(),
+                                                style: const TextStyle(
+                                                    color: Colors.white, fontSize: 12),
+                                              ),
+                                            ],
+                                          ),
                                           onTap: () {
                                             context.pushNamed(
-                                                RouteConstants.user,
-                                                params: {
-                                                  'id': snapshot.data!.uid
-                                                });
+                                              RouteConstants.user,
+                                              params: {
+                                                'id': snapshot.data!.uid
+                                              });
                                           },
-                                          child: ListTile(
-                                            title: Text(
-                                              snapshot.data!.username,
-                                              style: const TextStyle(
-                                                  color: Colors.black),
-                                            ),
-                                            subtitle: Text(
-                                              _postService.postList[index].post,
-                                              style: const TextStyle(
-                                                  color: Colors.black),
-                                            ),
+                                          subtitle: Text(
+                                            _postService.postList[index].post,
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                           ),
                                         ),
                                       ],
@@ -132,10 +147,15 @@ class _DisplayFeedState extends State<DisplayFeed> {
                     ),
                   );
                 } else {
-                  return Expanded(
-                    child: ListView(shrinkWrap: true, children: [
-                      Text("You Are Not Following Any Users That Have Posted"),
-                    ]),
+                  return LiquidPullToRefresh(
+                    onRefresh: () async {
+                      setState(() {});
+                    },
+                    child: Expanded(
+                      child: ListView(shrinkWrap: true, children: [
+                        Text("You Are Not Following Any Users That Have Posted"),
+                      ]),
+                    ),
                   );
                 }
               } else {
