@@ -6,10 +6,10 @@ class LoginOrSignUp extends StatefulWidget {
   const LoginOrSignUp({Key? key}) : super(key: key);
 
   @override
-  _LoginOrSignUpState createState() => _LoginOrSignUpState();
+  LoginOrSignUpState createState() => LoginOrSignUpState();
 }
 
-class _LoginOrSignUpState extends State<LoginOrSignUp> {
+class LoginOrSignUpState extends State<LoginOrSignUp> {
   bool isLogin = true;
 
   void toggle() {

@@ -19,19 +19,13 @@ class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   final PostService _postService = PostService();
   final AuthUser _authUser = AuthUser();
-  final FallBackServices _fallback = FallBackServices();
+  final FallBackServices fallback = FallBackServices();
   final user = FirebaseAuth.instance.currentUser!;
   final postController = TextEditingController();
 
   String currentUserId = '';
 
   CollectionReference userRef = FirebaseFirestore.instance.collection('users');
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -41,16 +35,15 @@ class _HomePageState extends State<HomePage>
       Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          
-
-               DisplayFeed(
-                userId: user.uid,
-                postService: _postService,
-                user: user,
-                ids: _authUser.docIds,
-                
-              ),
-              SizedBox(height: 20,)
+          DisplayFeed(
+            userId: user.uid,
+            postService: _postService,
+            user: user,
+            ids: _authUser.docIds,
+          ),
+          const SizedBox(
+            height: 20,
+          )
         ],
       ),
       Padding(
@@ -71,6 +64,15 @@ class _HomePageState extends State<HomePage>
                     ),
                     FloatingActionButton(
                       onPressed: () async {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const Center(
+                                child: CircularProgressIndicator(
+                              color: Colors.greenAccent,
+                            ));
+                          },
+                        );
                         await _postService.publishPost(
                             postController.text, context);
                         postController.text = '';
@@ -78,24 +80,8 @@ class _HomePageState extends State<HomePage>
                       },
                       child: const Icon(Icons.post_add_outlined),
                     ),
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          AuthService().logout();
-                        },
-                        icon: const Icon(Icons.logout_outlined),
-                        label: const Text("sign out"),
-                      ),
-
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          setState(() {
-                        Navigator.pop(context);
-                            
-                          });
-                        },
-                        icon: const Icon(Icons.refresh_rounded),
-                        label: const Text(""),
-                      ),
+                   
+                    
                   ],
                 );
               },
@@ -122,6 +108,5 @@ class _HomePageState extends State<HomePage>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

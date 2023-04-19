@@ -4,6 +4,7 @@ import 'package:social_media_app/auth/auth_page.dart';
 import 'package:social_media_app/config/router_constants.dart';
 import 'package:social_media_app/screens/followers_screen.dart';
 import 'package:social_media_app/screens/other_user_screen.dart';
+import 'package:social_media_app/screens/profile_edit_screen.dart';
 import 'package:social_media_app/screens/random_screen.dart';
 
 class AppRouter {
@@ -25,10 +26,11 @@ class AppRouter {
             },
           ),
           GoRoute(
-            path: 'random',
-            name: 'random',
+            path: 'edit/:id',
+            name: RouteConstants.edit,
             builder: (BuildContext context, GoRouterState state) {
-              return const RandomScreen(
+              return ProfileEditScreen(
+                userId: state.params['id']!,
               );
             },
           ),

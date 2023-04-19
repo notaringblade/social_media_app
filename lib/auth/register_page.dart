@@ -1,12 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:social_media_app/models/user_model.dart';
 import 'package:social_media_app/services/auth_service.dart';
 import 'package:social_media_app/widgets/common/default_button_widget.dart';
 import 'package:social_media_app/widgets/common/text_field.dart';
 
-import '../widgets/common/custom_loading_widget.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
@@ -120,7 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ))
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             )
           ]),
@@ -131,12 +127,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
   SnackBar snackBarMessage(String s, Color color) {
     return SnackBar(
-      duration: Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 800),
       backgroundColor: color,
       content: Text(
         s,
         textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }

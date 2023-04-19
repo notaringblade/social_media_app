@@ -36,6 +36,13 @@ class AuthUser {
     }
   }
 
+  Future updateUserData(String uid, String username) async{
+    await FirebaseFirestore.instance.collection('users').doc(user!.uid).update({
+      'username': username
+    });
+    
+  }
+
   Future followUser(String otherUid) async {
     await FirebaseFirestore.instance.collection('users').doc(user!.uid).update({
       'following': FieldValue.arrayUnion([otherUid])

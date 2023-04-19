@@ -19,6 +19,7 @@ class CustomTextField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: NeumorphWidget(
         child: TextFormField(
+          autofocus: false,
           controller: textController,
           cursorColor: Colors.white,
           style: const TextStyle(color: Colors.white),

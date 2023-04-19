@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/services/auth_service.dart';
-import 'package:social_media_app/widgets/common/custom_loading_widget.dart';
 import 'package:social_media_app/widgets/common/default_button_widget.dart';
 import 'package:social_media_app/widgets/common/text_field.dart';
 
@@ -102,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                     ))
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             )
           ]),
@@ -113,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
 
   SnackBar snackBarMessage(String s) {
     return SnackBar(
-      duration: Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 800),
       backgroundColor: Colors.red,
       content: Text(
         s,

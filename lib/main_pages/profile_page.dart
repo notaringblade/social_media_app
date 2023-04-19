@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:social_media_app/config/router_constants.dart';
 import 'package:social_media_app/models/post_model.dart';
+import 'package:social_media_app/services/auth_service.dart';
 import 'package:social_media_app/services/post_service.dart';
 import 'package:social_media_app/widgets/post%20Widgets/display_posts.dart';
 import 'package:social_media_app/widgets/user%20display%20data/users_data.dart';
@@ -43,9 +46,21 @@ class _ProfilePageState extends State<ProfilePage>
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const Text(
-              "Profile Page",
-              style: TextStyle(color: Colors.white),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Profile Page",
+                  style: TextStyle(color: Colors.white),
+                ),
+                 OutlinedButton.icon(
+                      onPressed: () {
+                        AuthService().logout();
+                      },
+                      icon: const Icon(Icons.logout_outlined),
+                      label: const Text("sign out"),
+                    ),
+              ],
             ),
             const SizedBox(
               height: 20,
@@ -57,14 +72,17 @@ class _ProfilePageState extends State<ProfilePage>
               // showChildOpacityTransition: false,
               child: ListView(shrinkWrap: true, children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 18),
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
                   child: Column(
                     children: [
                       UserDisplay(
                         users: users,
                         userId: user!.uid,
                       ),
-                      TextButton(onPressed: () {}, child: Text("Edit Profile"))
+                      TextButton(onPressed: () {
+                         context.pushNamed(RouteConstants.edit,
+                                params: {'id': user!.uid});
+                      }, child: const Text("Edit Profile"))
                     ],
                   ),
                 ),
@@ -90,6 +108,5 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => false;
 }

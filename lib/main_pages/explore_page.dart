@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:sizer/sizer.dart';
 import 'package:social_media_app/models/user_model.dart';
 import 'package:social_media_app/services/auth_user.dart';
 
@@ -48,38 +49,31 @@ class _ExplorePageState extends State<ExplorePage>
           StreamBuilder(
             stream: _authUser.fetchUsers(user!.uid),
             builder: (context, snapshot) {
-              print(_authUser.usersList);
-              return Expanded(
-                child: LiquidPullToRefresh(
-                  // animSpeedFactor: 0.5 ,
-                  animSpeedFactor: 5,
-                  height: 50,
-                  showChildOpacityTransition: false,
-                  onRefresh: refresh,
+              // print(_authUser.usersList);
+              return LiquidPullToRefresh(
+                animSpeedFactor: 5,
+                height: 50,
+                showChildOpacityTransition: false,
+                onRefresh: refresh,
+                child: SizedBox(
+                  height: MediaQuery.sizeOf(context).height - 200,
                   child: ListView.builder(
-                    shrinkWrap: true,
                     itemCount: _authUser.usersList.length,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                context.pushNamed('user', params: {
-                                  'id': _authUser.usersList[index].uid
-                                });
-                              },
-                              child: ListTile(
-                                title:
-                                    Text(_authUser.usersList[index].username),
-                                subtitle: Text(
-                                    "${_authUser.usersList[index].firstName} ${_authUser.usersList[index].lastName}"),
-                              ),
-                            ),
-                          ],
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: GestureDetector(
+                          onTap: () {
+                            context.pushNamed('user', params: {
+                              'id': _authUser.usersList[index].uid
+                            });
+                          },
+                          child: ListTile(
+                            title:
+                                Text(_authUser.usersList[index].username),
+                            subtitle: Text(
+                                "${_authUser.usersList[index].firstName} ${_authUser.usersList[index].lastName}"),
+                          ),
                         ),
                       );
                     },
@@ -94,6 +88,5 @@ class _ExplorePageState extends State<ExplorePage>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

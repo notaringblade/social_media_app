@@ -18,7 +18,6 @@ class PostModel extends Equatable {
   
 
   @override
-  // TODO: implement props
   List<Object> get props => [post, uid, created, likes];
 
 

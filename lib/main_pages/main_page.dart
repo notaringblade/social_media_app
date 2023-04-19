@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:social_media_app/main_pages/explore_page.dart';
-import 'package:social_media_app/main_pages/friends_page.dart';
 import 'package:social_media_app/main_pages/home_page.dart';
 import 'package:social_media_app/main_pages/profile_page.dart';
 
@@ -53,6 +52,7 @@ class _MainPageState extends State<MainPage>
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        
         leading: const Icon(Icons.menu, size: 24, color: Colors.white),
         backgroundColor: Colors.transparent,
       ),
@@ -73,7 +73,7 @@ class _MainPageState extends State<MainPage>
             selectedIndex: currentIndex,
 
             activeColor: Colors.black,
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             tabBackgroundColor: const Color(0xffffffff),
             color: Colors.grey,
             gap: 8,
@@ -107,6 +107,5 @@ class _MainPageState extends State<MainPage>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

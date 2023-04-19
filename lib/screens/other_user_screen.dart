@@ -66,10 +66,12 @@ class _OtherUserScreenState extends State<OtherUserScreen> {
                     children: [
                       UserDisplay(users: users, userId: widget.userId),
                       StreamBuilder(
-                        stream:
-                            _authUser.isFollowingCheck(user!.uid, widget.userId),
+                        stream: _authUser.isFollowingCheck(
+                            user!.uid, widget.userId),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.done) {
+                          
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
                             return Column(
                               children: [
                                 widget.userId == user!.uid
